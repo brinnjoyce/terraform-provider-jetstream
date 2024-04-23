@@ -163,13 +163,13 @@ func streamConfigFromResourceData(d *schema.ResourceData) (cfg api.StreamConfig,
 		subjects[i] = sub.(string)
 	}
 
-	var subjectTransforms *api.SubjectTransformConfig
-	transforms := d.Get("subject_transform").([]any)
+	var subjectTransform *api.SubjectTransformConfig
 
-	if len(transforms) == 1 {
-		for _, transform := range transforms {
-			st := transform.(map[string]any)
-			subjectTransforms = &api.SubjectTransformConfig{
+	s, ok := d.GetOk("subject_transform")
+	if ok {
+		st, ok := s.(map[string]any)
+		if ok {
+			subjectTransform = &api.SubjectTransformConfig{
 				Source:      st["source"].(string),
 				Destination: st["destination"].(string),
 			}
@@ -211,7 +211,7 @@ func streamConfigFromResourceData(d *schema.ResourceData) (cfg api.StreamConfig,
 		DenyPurge:        d.Get("deny_purge").(bool),
 		RollupAllowed:    d.Get("allow_rollup_hdrs").(bool),
 		Placement:        placement,
-		SubjectTransform: subjectTransforms,
+		SubjectTransform: subjectTransform,
 	}
 
 	repubSrc := d.Get("republish_source").(string)

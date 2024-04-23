@@ -247,13 +247,14 @@ func resourceStream() *schema.Resource {
 				},
 			},
 			"subject_transform": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeMap,
 				Description: "Subject transform to apply to matching messages",
-				MaxItems:    1,
 				ForceNew:    false,
 				Required:    false,
 				Optional:    true,
-				Elem:        &schema.Resource{Schema: subjectTransform},
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"mirror": {
 				Type:        schema.TypeList,

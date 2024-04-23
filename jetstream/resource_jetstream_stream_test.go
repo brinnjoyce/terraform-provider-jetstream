@@ -167,7 +167,7 @@ provider "jetstream" {
 resource "jetstream_stream" "test" {
 	name = "TEST"
 	subjects = ["TEST.*"]
-	subject_transform {
+	subject_transform = {
 		source = "TEST.>"
 		destination = "1.>"
 	}
@@ -278,8 +278,8 @@ func TestResourceStream(t *testing.T) {
 				Config: fmt.Sprintf(testStreamSubjectTransform, nc.ConnectedUrl()),
 				Check: resource.ComposeTestCheckFunc(
 					testStreamExist(t, mgr, "TEST"),
-					resource.TestCheckResourceAttr("jetstream_stream.test", "subject_transform.0.source", "TEST.>"),
-					resource.TestCheckResourceAttr("jetstream_stream.test", "subject_transform.0.destination", "1.>"),
+					resource.TestCheckResourceAttr("jetstream_stream.test", "subject_transform.source", "TEST.>"),
+					resource.TestCheckResourceAttr("jetstream_stream.test", "subject_transform.destination", "1.>"),
 					testStreamHasSubjects(t, mgr, "TEST", []string{"TEST.*"}),
 					testStreamIsTransformed(t, mgr, "TEST", api.SubjectTransformConfig{Source: "TEST.>", Destination: "1.>"}),
 				),
